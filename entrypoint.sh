@@ -7,6 +7,16 @@ then
     } &&
     trap cleanup EXIT
 fi &&
+    if [ -f /opt/docker/extension/init.root.sh ]
+    then
+        sudo sh /opt/docker/extension/init.root.sh
+    fi &&
+    if [ -f /opt/docker/extension/user.sudo ]
+    then
+        cat /opt/docker/extension/user.sudo > /etc/sudoers.d/user
+    else
+        rm /etc/sudoers.d/user
+    fi &&
     if [ -f /opt/docker/extension/init.user.sh ]
     then
         sh /opt/docker/extension/init.user.sh "${@}"
