@@ -33,6 +33,9 @@ RUN \
             adduser user && \
             mkdir /opt/docker/workspace && \
             chown user:user /opt/docker/workspace && \
+            dnf install --assumeyes sudo && \
+            echo "user ALL=(ALL) NOPASSWD: /usr/bin/sh" > /etc/sudoers.d/user && \
+            chmod 0444 /etc/sudoers.d/user && \
             dnf update --assumeyes && \
             dnf clean all
 USER user
