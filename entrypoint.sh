@@ -1,25 +1,25 @@
 #!/bin/sh
 
-if [ -f /opt/docker/extension/cleanup.sh ]
+if [ -f /home/user/extension/cleanup.sh ]
 then
     cleanup() {
-        sh /opt/docker/extension/cleanup.sh
+        sh /home/user/extension/cleanup.sh
     } &&
     trap cleanup EXIT
 fi &&
-    if [ -f /opt/docker/extension/init.root.sh ]
+    if [ -f /home/user/extension/init.root.sh ]
     then
-        sudo sh /opt/docker/extension/init.root.sh
+        sudo sh /home/user/extension/init.root.sh
     fi &&
-    if [ -f /opt/docker/extension/user.sudo ]
+    if [ -f /home/user/extension/user.sudo ]
     then
-        cat /opt/docker/extension/user.sudo | sudo tee /etc/sudoers.d/user
+        cat /home/user/extension/user.sudo | sudo tee /etc/sudoers.d/user
     else
         sudo rm /etc/sudoers.d/user
     fi &&
-    if [ -f /opt/docker/extension/init.user.sh ]
+    if [ -f /home/user/extension/init.user.sh ]
     then
-        sh /opt/docker/extension/init.user.sh "${@}"
+        sh /home/user/extension/init.user.sh "${@}"
     fi &&
-    PROJECT_NAME="${PROJECT_NAME}" node /opt/docker/c9sdk/server.js --listen 0.0.0.0 -w /opt/docker/workspace -p ${CLOUD9_PORT} &&
+    PROJECT_NAME="${PROJECT_NAME}" node /home/user/c9sdk/server.js --listen 0.0.0.0 -w /opt/docker/workspace -p ${CLOUD9_PORT} &&
     shift ${#}
