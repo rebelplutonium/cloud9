@@ -21,5 +21,5 @@ fi &&
     then
         sh /home/user/extension/init.user.sh "${@}"
     fi &&
-    PROJECT_NAME="${PROJECT_NAME}" node /home/user/c9sdk/server.js --listen 0.0.0.0 -w /opt/docker/workspace -p ${CLOUD9_PORT} &&
+    PROJECT_NAME="${PROJECT_NAME}" node /home/user/c9sdk/server.js --listen 0.0.0.0 -w /home/user/workspace -p ${CLOUD9_PORT} &&
     shift ${#}
