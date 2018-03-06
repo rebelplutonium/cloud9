@@ -1,4 +1,5 @@
 FROM fedora:27
+COPY adjourn.sh /root/adjourn.sh
 RUN \
     dnf update --assumeyes && \
         dnf \
@@ -35,6 +36,8 @@ RUN \
             dnf install --assumeyes sudo bash-completion && \
             echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
             chmod 0444 /etc/sudoers.d/user && \
+            cp /root/adjourn.sh /usr/local/bin/adjourn &&
+            chmod 0500 /usr/local/bin/adjourn &&
             dnf update --assumeyes && \
             dnf clean all
 USER user
@@ -61,4 +64,3 @@ ONBUILD RUN \
         if [ -d /home/user/extension/ssh_config ]; then ls -1 /home/user/extension/ssh_config | while read FILE; do cp /home/user/extension/ssh_config/${FILE} /home/user/.ssh/config.d/${FILE} && chmod 0600 /home/user/.ssh/config.d/${FILE%}; done; fi
 ONBUILD VOLUME /home
 ONBUILD VOLUME /home/user
-
