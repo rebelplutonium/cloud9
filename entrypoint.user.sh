@@ -7,16 +7,6 @@ then
     } &&
     trap cleanup EXIT
 fi &&
-    if [ -f /home/user/extension/init.root.sh ]
-    then
-        sudo sh /home/user/extension/init.root.sh
-    fi &&
-    if [ -f /home/user/extension/user.sudo ]
-    then
-        cat /home/user/extension/user.sudo | sudo tee /etc/sudoers.d/user
-    else
-        sudo rm /etc/sudoers.d/user
-    fi &&
     if [ -f /home/user/extension/init.user.sh ]
     then
         sh /home/user/extension/init.user.sh "${@}"

@@ -33,8 +33,6 @@ RUN \
             mkdir /home/user/workspace && \
             chown user:user /home/user/workspace && \
             dnf install --assumeyes sudo bash-completion && \
-            echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
-            chmod 0444 /etc/sudoers.d/user && \
             dnf update --assumeyes && \
             dnf clean all
 USER user
@@ -45,13 +43,13 @@ RUN \
         mkdir .ssh/config.d && \
         echo "Include ~/.ssh/config.d/*" > .ssh/config && \
         chmod 0600 .ssh/config
-COPY entrypoint.sh /home/user/entrypoint.sh
-ENTRYPOINT ["sh", "/home/user/entrypoint.sh"]
+USER root
+COPY entrypoint.user.sh entrypoint.root.sh /home/user/scripts
+ENTRYPOINT ["sh", "/home/user/scripts/entrypoint.root.sh"]
 CMD []
-ONBUILD USER root
 ONBUILD COPY extension /home/user/extension
 ONBUILD RUN \
-    if [ -d /home/user/root/sbin ]; then ls -1 /home/user/extension/sbin | while read FILE; do cp /home/user/extension/sbin/${FILE} /usr/local/sbin/${FILE%.*} && chmod 0500 /usr/local/sbin/${FILE%.*}; done; fi && \
+    if [ -d /home/user/extension/sbin ]; then ls -1 /home/user/extension/sbin | while read FILE; do cp /home/user/extension/sbin/${FILE} /usr/local/sbin/${FILE%.*} && chmod 0500 /usr/local/sbin/${FILE%.*}; done; fi && \
         if [ -d /home/user/extension/bin ]; then ls -1 /home/user/extension/bin | while read FILE; do cp /home/user/extension/bin/${FILE} /usr/local/bin/${FILE%.*} && chmod 0555 /usr/local/bin/${FILE%.*}; done; fi && \
         if [ -f /home/user/extension/run.root.sh ]; then sh /home/user/extension/run.root.sh; fi && \
         if [ -d /home/user/extension/completion ]; then ls -1 /home/user/extension/completion | while read FILE; do cp /home/user/extension/completion/${FILE} /etc/bash_completion; done; fi
