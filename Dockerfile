@@ -47,8 +47,6 @@ ONBUILD RUN \
         if [ -d /home/user/extension/completion ]; then ls -1 /home/user/extension/completion | while read FILE; do cp /home/user/extension/completion/${FILE} /etc/bash_completion; done; fi
 ONBUILD USER user
 ONBUILD RUN \
-    if [ -f /home/user/extension/run.user.sh ]; then sh /home/user/extension/run.user.sh; fi && \
-        if [ -d /home/user/extension/ssh_config ]; then ls -1 /home/user/extension/ssh_config | while read FILE; do cp /home/user/extension/ssh_config/${FILE} /home/user/.ssh/config.d/${FILE} && chmod 0600 /home/user/.ssh/config.d/${FILE%}; done; fi
-ONBUILD VOLUME /home
-ONBUILD VOLUME /home/user
+    if [ -f /home/user/extension/run.user.sh ]; then sh /home/user/extension/run.user.sh; fi
+
 
