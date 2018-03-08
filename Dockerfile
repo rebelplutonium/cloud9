@@ -33,7 +33,7 @@ RUN \
             mkdir /home/user/workspace && \
             chown user:user /home/user/workspace && \
             dnf install --assumeyes sudo bash-completion && \
-            curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user &&
+            curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user && \
             dnf update --assumeyes && \
             dnf clean all
 COPY entrypoint.user.sh entrypoint.root.sh /home/user/scripts/
