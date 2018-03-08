@@ -33,18 +33,10 @@ RUN \
             mkdir /home/user/workspace && \
             chown user:user /home/user/workspace && \
             dnf install --assumeyes sudo bash-completion && \
+            curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user &&
             dnf update --assumeyes && \
             dnf clean all
-USER user
-WORKDIR /home/user
-RUN \
-    curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | bash && \
-        mkdir .ssh && \
-        mkdir .ssh/config.d && \
-        echo "Include ~/.ssh/config.d/*" > .ssh/config && \
-        chmod 0600 .ssh/config
-USER root
-COPY entrypoint.user.sh entrypoint.root.sh /home/user/scripts
+COPY entrypoint.user.sh entrypoint.root.sh /home/user/scripts/
 ENTRYPOINT ["sh", "/home/user/scripts/entrypoint.root.sh"]
 CMD []
 ONBUILD COPY extension /home/user/extension
