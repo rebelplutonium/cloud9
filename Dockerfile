@@ -48,5 +48,5 @@ ONBUILD RUN \
 ONBUILD USER user
 ONBUILD RUN \
     if [ -f /home/user/extension/run.user.sh ]; then sh /home/user/extension/run.user.sh; fi
-
+ONBUILD USER root
 
