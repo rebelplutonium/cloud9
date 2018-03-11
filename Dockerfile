@@ -23,30 +23,25 @@ RUN \
             gcc-c++ \
             nodejs && \
             adduser user && \
-            mkdir /opt/c9sdk && \
-            git -C /opt/c9sdk init && \
-            git -C /opt/c9sdk remote add origin git://github.com/c9/core.git && \
-            git -C /opt/c9sdk pull origin master && \
-            /opt/c9sdk/scripts/install-sdk.sh && \
-            sed -i "s#127.0.0.1#0.0.0.0#g" /opt/c9sdk/configs/standalone.js && \
-            sed -i "s#opts[.]projectName = basename.opts[.]workspaceDir.;#opts.projectName = process.env.PROJECT_NAME#" /opt/c9sdk/plugins/c9.vfs.standalone/standalone.js && \
-            mkdir /home/user/workspace && \
-            chown user:user /home/user/workspace && \
-            dnf install --assumeyes sudo bash-completion && \
+            mkdir /opt/cloud9 &&
+            mkdir /opt/cloud9/c9sdk && \
+            git -C /opt/cloud9/c9sdk init && \
+            git -C /opt/cloud9/c9sdk remote add origin git://github.com/c9/core.git && \
+            git -C /opt/cloud9/c9sdk pull origin master && \
+            /opt/cloud9/c9sdk/scripts/install-sdk.sh && \
+            sed -i "s#127.0.0.1#0.0.0.0#g" /opt/cloud9/c9sdk/configs/standalone.js && \
+            sed -i "s#opts[.]projectName = basename.opts[.]workspaceDir.;#opts.projectName = process.env.PROJECT_NAME#" /opt/cloud9/c9sdk/plugins/c9.vfs.standalone/standalone.js && \
             curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user && \
             dnf update --assumeyes && \
             dnf clean all
-COPY entrypoint.user.sh entrypoint.root.sh /opt/scripts/
-ENTRYPOINT ["sh", "/opt/scripts/entrypoint.root.sh"]
+COPY entrypoint.user.sh entrypoint.root.sh terminate.sh /opt/cloud9/scripts/
+ENTRYPOINT ["sh", "/opt/cloud9/scripts/entrypoint.root.sh"]
 CMD []
-ONBUILD COPY extension /home/user/extension
+ONBUILD COPY extension /opt/cloud9/extension
 ONBUILD RUN \
-    if [ -d /home/user/extension/sbin ]; then ls -1 /home/user/extension/sbin | while read FILE; do cp /home/user/extension/sbin/${FILE} /usr/local/sbin/${FILE%.*} && chmod 0500 /usr/local/sbin/${FILE%.*}; done; fi && \
-        if [ -d /home/user/extension/bin ]; then ls -1 /home/user/extension/bin | while read FILE; do cp /home/user/extension/bin/${FILE} /usr/local/bin/${FILE%.*} && chmod 0555 /usr/local/bin/${FILE%.*}; done; fi && \
-        if [ -f /home/user/extension/run.root.sh ]; then sh /home/user/extension/run.root.sh; fi && \
-        if [ -d /home/user/extension/completion ]; then ls -1 /home/user/extension/completion | while read FILE; do cp /home/user/extension/completion/${FILE} /etc/bash_completion; done; fi
-ONBUILD USER user
-ONBUILD RUN \
-    if [ -f /home/user/extension/run.user.sh ]; then sh /home/user/extension/run.user.sh; fi
+    if [ -d /opt/cloud9/extension/sbin ]; then ls -1 /opt/cloud9/extension/sbin | while read FILE; do cp /opt/cloud9/extension/sbin/${FILE} /usr/local/sbin/${FILE%.*} && chmod 0500 /usr/local/sbin/${FILE%.*}; done; fi && \
+        if [ -d /opt/cloud9/extension/bin ]; then ls -1 /opt/cloud9/extension/bin | while read FILE; do cp /opt/cloud9/extension/bin/${FILE} /usr/local/bin/${FILE%.*} && chmod 0555 /usr/local/bin/${FILE%.*}; done; fi && \
+        if [ -f /opt/cloud9/extension/run.root.sh ]; then sh /opt/cloud9/extension/run.root.sh; fi && \
+        if [ -f /opt/cloud9/extension/run.user.sh ]; then su -c "sh /opt/cloud9/extension/run.user.sh" user; fi
 ONBUILD USER root
 
