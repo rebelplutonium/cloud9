@@ -1,17 +1,24 @@
 #!/bin/sh
 
-if [ -f /home/user/extension/parse.sh ]
+if [ -f /opt/cloud9/extension/cleanup.root.sh ]
 then
-    sh /home/user/extension/parse.sh "${@}"
+    cleanup() {
+        sh /opt/cloud9/extension/cleanup.root.sh
+    } &&
+    trap cleanup EXIT
 fi &&
+    if [ -f /opt/cloud9/extension/parse.sh ]
+    then
+        sh /opt/cloud9/extension/parse.sh "${@}"
+    fi &&
     shift ${#} &&
-    if [ -f /home/user/extension/init.root.sh ]
+    if [ -f /opt/cloud9/extension/init.root.sh ]
     then
-        sh /home/user/extension/init.root.sh
+        sh /opt/cloud9/extension/init.root.sh
     fi &&
-    if [ -f /home/user/extension/user.sudo ]
+    if [ ! -d /opt/cloud9/workspace ]
     then
-        cat /home/user/extension/user.sudo > /etc/sudoers.d/user &&
-            chmod 0444 /etc/sudoers.d/user
+        mkdir /opt/cloud9/workspace &&
+            chown -R user:user /opt/cloud9/workspace
     fi &&
-    su -c "sh /opt/scripts/entrypoint.user.sh" user
+    su -c "sh /opt/cloud9/scripts/entrypoint.user.sh" user
