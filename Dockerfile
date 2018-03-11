@@ -23,7 +23,7 @@ RUN \
             gcc-c++ \
             nodejs && \
             adduser user && \
-            mkdir /opt/cloud9 &&
+            mkdir /opt/cloud9 && \
             mkdir /opt/cloud9/c9sdk && \
             git -C /opt/cloud9/c9sdk init && \
             git -C /opt/cloud9/c9sdk remote add origin git://github.com/c9/core.git && \
