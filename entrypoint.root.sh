@@ -16,9 +16,9 @@ fi &&
     then
         sh /opt/cloud9/extension/init.root.sh
     fi &&
-    if [ -f /opt/cloud9/extension/user.sudo ]
+    if [ ! -d /opt/cloud9/workspace ]
     then
-        cat /opt/cloud9/extension/user.sudo > /etc/sudoers.d/user &&
-            chmod 0444 /etc/sudoers.d/user
+        mkdir /opt/cloud9/workspace &&
+            chown -R user:user /opt/cloud9/workspace
     fi &&
     su -c "sh /opt/cloud9/scripts/entrypoint.user.sh" user
