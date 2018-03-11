@@ -23,21 +23,21 @@ RUN \
             gcc-c++ \
             nodejs && \
             adduser user && \
-            mkdir /home/user/c9sdk && \
-            git -C /home/user/c9sdk init && \
-            git -C /home/user/c9sdk remote add origin git://github.com/c9/core.git && \
-            git -C /home/user/c9sdk pull origin master && \
-            /home/user/c9sdk/scripts/install-sdk.sh && \
-            sed -i "s#127.0.0.1#0.0.0.0#g" /home/user/c9sdk/configs/standalone.js && \
-            sed -i "s#opts[.]projectName = basename.opts[.]workspaceDir.;#opts.projectName = process.env.PROJECT_NAME#" /home/user/c9sdk/plugins/c9.vfs.standalone/standalone.js && \
+            mkdir /opt/c9sdk && \
+            git -C /opt/c9sdk init && \
+            git -C /opt/c9sdk remote add origin git://github.com/c9/core.git && \
+            git -C /opt/c9sdk pull origin master && \
+            /opt/c9sdk/scripts/install-sdk.sh && \
+            sed -i "s#127.0.0.1#0.0.0.0#g" /opt/c9sdk/configs/standalone.js && \
+            sed -i "s#opts[.]projectName = basename.opts[.]workspaceDir.;#opts.projectName = process.env.PROJECT_NAME#" /opt/c9sdk/plugins/c9.vfs.standalone/standalone.js && \
             mkdir /home/user/workspace && \
             chown user:user /home/user/workspace && \
             dnf install --assumeyes sudo bash-completion && \
             curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user && \
             dnf update --assumeyes && \
             dnf clean all
-COPY entrypoint.user.sh entrypoint.root.sh /home/user/scripts/
-ENTRYPOINT ["sh", "/home/user/scripts/entrypoint.root.sh"]
+COPY entrypoint.user.sh entrypoint.root.sh /opt/scripts/
+ENTRYPOINT ["sh", "/opt/scripts/entrypoint.root.sh"]
 CMD []
 ONBUILD COPY extension /home/user/extension
 ONBUILD RUN \

@@ -14,4 +14,4 @@ fi &&
         cat /home/user/extension/user.sudo > /etc/sudoers.d/user &&
             chmod 0444 /etc/sudoers.d/user
     fi &&
-    su -c "sh /home/user/scripts/entrypoint.user.sh" user
+    su -c "sh /opt/scripts/entrypoint.user.sh" user
