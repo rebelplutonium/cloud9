@@ -1,4 +1,5 @@
 FROM fedora:27
+ARG TARGET_UID=1000
 RUN \
     dnf update --assumeyes && \
         dnf \
@@ -22,7 +23,7 @@ RUN \
             gcc \
             gcc-c++ \
             nodejs && \
-            adduser user && \
+            adduser -u ${TARGET_UID} user && \
             mkdir /opt/cloud9 && \
             mkdir /opt/cloud9/c9sdk && \
             git -C /opt/cloud9/c9sdk init && \
