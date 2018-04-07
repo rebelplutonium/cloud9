@@ -11,5 +11,5 @@ fi &&
     then
         sh /opt/cloud9/extension/init.user.sh "${@}"
     fi &&
-    PROJECT_NAME="${PROJECT_NAME}" node /opt/cloud9/c9sdk/server.js --listen 0.0.0.0 -w /opt/cloud9/workspace -p ${CLOUD9_PORT} &&
+    PROJECT_NAME="${PROJECT_NAME}" node /opt/cloud9/c9sdk/server.js --listen 0.0.0.0 -w ${WORKSPACE_DIR} -p ${CLOUD9_PORT} &&
     shift ${#}

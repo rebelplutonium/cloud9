@@ -16,9 +16,9 @@ fi &&
     then
         sh /opt/cloud9/extension/init.root.sh
     fi &&
-    if [ ! -d /opt/cloud9/workspace ]
+    if [ ! -d ${WORKSPACE_DIR} ]
     then
-        mkdir /opt/cloud9/workspace &&
-            chown -R user:user /opt/cloud9/workspace
+        mkdir ${WORKSPACE_DIR} &&
+            chown -R user:user ${WORKSPACE_DIR}
     fi &&
     su -c "sh /opt/cloud9/scripts/entrypoint.user.sh" user
