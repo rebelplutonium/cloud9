@@ -36,7 +36,7 @@ RUN \
             dnf update --assumeyes && \
             dnf clean all
 COPY entrypoint.user.sh entrypoint.root.sh terminate.sh /opt/cloud9/scripts/
-ENV WORKSPACE_DIR=/opt/cloud9/workspace
+ENV CLOUD9_WORKSPACE=/opt/cloud9/workspace
 ENTRYPOINT ["sh", "/opt/cloud9/scripts/entrypoint.root.sh"]
 CMD []
 ONBUILD COPY extension /opt/cloud9/extension
