@@ -1,12 +1,13 @@
 #!/bin/sh
 
-if [ -f /opt/cloud9/extension/cleanup.user.sh ]
-then
-    cleanup() {
-        sh /opt/cloud9/extension/cleanup.user.sh
-    } &&
-    trap cleanup EXIT
-fi &&
+export PATH=/opt/cloud9/bin:${PATH} &&
+    if [ -f /opt/cloud9/extension/cleanup.user.sh ]
+    then
+        cleanup() {
+            sh /opt/cloud9/extension/cleanup.user.sh
+        } &&
+        trap cleanup EXIT
+    fi &&
     if [ -f /opt/cloud9/extension/init.user.sh ]
     then
         sh /opt/cloud9/extension/init.user.sh "${@}"

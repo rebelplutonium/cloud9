@@ -1,5 +1,4 @@
-FROM fedora:27
-ARG TARGET_UID=1000
+FROM fedora:28
 RUN \
     dnf update --assumeyes && \
         dnf \
@@ -23,7 +22,7 @@ RUN \
             gcc \
             gcc-c++ \
             nodejs && \
-            adduser -u ${TARGET_UID} user && \
+            adduser user && \
             mkdir /opt/cloud9 && \
             mkdir /opt/cloud9/c9sdk && \
             git -C /opt/cloud9/c9sdk init && \
@@ -33,6 +32,8 @@ RUN \
             sed -i "s#127.0.0.1#0.0.0.0#g" /opt/cloud9/c9sdk/configs/standalone.js && \
             sed -i "s#opts[.]projectName = basename.opts[.]workspaceDir.;#opts.projectName = process.env.PROJECT_NAME#" /opt/cloud9/c9sdk/plugins/c9.vfs.standalone/standalone.js && \
             curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | su -c "bash" user && \
+            mkdir /opt/cloud9/bin && \
+            mkdir /opt/cloud9/sbin && \
             dnf update --assumeyes && \
             dnf clean all
 COPY entrypoint.user.sh entrypoint.root.sh terminate.sh /opt/cloud9/scripts/
@@ -41,8 +42,8 @@ ENTRYPOINT ["sh", "/opt/cloud9/scripts/entrypoint.root.sh"]
 CMD []
 ONBUILD COPY extension /opt/cloud9/extension
 ONBUILD RUN \
-    if [ -d /opt/cloud9/extension/sbin ]; then ls -1 /opt/cloud9/extension/sbin | while read FILE; do cp /opt/cloud9/extension/sbin/${FILE} /usr/local/sbin/${FILE%.*} && chmod 0500 /usr/local/sbin/${FILE%.*}; done; fi && \
-        if [ -d /opt/cloud9/extension/bin ]; then ls -1 /opt/cloud9/extension/bin | while read FILE; do cp /opt/cloud9/extension/bin/${FILE} /usr/local/bin/${FILE%.*} && chmod 0555 /usr/local/bin/${FILE%.*}; done; fi && \
+    if [ -d /opt/cloud9/extension/sbin ]; then ls -1 /opt/cloud9/extension/sbin | while read FILE; do cp /opt/cloud9/extension/sbin/${FILE} /opt/cloud9/sbin/${FILE%.*} && chmod 0500 /opt/cloud9/sbin/${FILE%.*}; done; fi && \
+        if [ -d /opt/cloud9/extension/bin ]; then ls -1 /opt/cloud9/extension/bin | while read FILE; do cp /opt/cloud9/extension/bin/${FILE} /opt/cloud9/bin/${FILE%.*} && chmod 0555 /opt/cloud9/bin/${FILE%.*}; done; fi && \
         if [ -f /opt/cloud9/extension/run.root.sh ]; then sh /opt/cloud9/extension/run.root.sh; fi && \
         if [ -f /opt/cloud9/extension/run.user.sh ]; then su -c "sh /opt/cloud9/extension/run.user.sh" user; fi
 ONBUILD USER root
