@@ -50,6 +50,13 @@ RUN \
             mkdir /opt/cloud9/completion && \
             echo "#includedir /opt/cloud9/sudo" >> /etc/sudoers.d/cloud9 && \
             chmod 0444 /etc/sudoers.d/cloud9 && \
+            (cat >> /home/user/.bashrc <<EOF
+for FILE in \$(ls -1 /opt/cloud9/completion)
+do
+    source /opt/cloud9/completion/${FILE}
+done
+EOF
+            ) &&
             dnf update --assumeyes && \
             dnf clean all
 COPY entrypoint.user.sh entrypoint.root.sh terminate.sh /opt/cloud9/scripts/
